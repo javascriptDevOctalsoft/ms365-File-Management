@@ -11,7 +11,10 @@ router.get("/login", async (req, res) => {
         const authUrl = await cca.getAuthCodeUrl({
                 scopes: ["User.Read", "offline_access"],
                 redirectUri: process.env.REDIRECT_URI,
-                state: [flag, selDocId]
+                state: [{
+					"flag":flag,
+					"selDocId":selDocId
+				}]
         });
         res.redirect(authUrl);
 });
