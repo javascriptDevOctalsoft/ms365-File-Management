@@ -14,6 +14,7 @@ router.get("/login", async (req, res) => {
         console.log("flag:", flag);
         console.log("req.query:15", req.query);
 		const state = JSON.stringify({ flag, selDocId, fileName, savedFlag});
+		const 
         const authUrl = await cca.getAuthCodeUrl({
                 scopes: ["User.Read", "offline_access"],
                 redirectUri: process.env.REDIRECT_URI,
@@ -24,6 +25,7 @@ router.get("/login", async (req, res) => {
 
 router.get("/auth/callback", async (req, res) => {
         console.log("/auth/callback");
+        console.log("req.query.state 28--------->", req.query.state);
         const state = req.query.state ? JSON.parse(req.query.state) : {};
 		const flag = state.flag;
 		const selDocId = state.selDocId;
