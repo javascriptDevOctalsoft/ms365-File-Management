@@ -37,7 +37,7 @@ router.get("/auth/callback", async (req, res) => {
         if (flag) {
                 req.session.selectedFlag = flag;
         }
-        res.redirect("/?flag="+flag+"selDocId="+selDocId);
+        res.redirect("/?flag="+flag+"&selDocId="+selDocId);
 });
 
 
