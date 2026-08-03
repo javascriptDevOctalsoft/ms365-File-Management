@@ -11,17 +11,14 @@ router.get("/login", async (req, res) => {
         const authUrl = await cca.getAuthCodeUrl({
                 scopes: ["User.Read", "offline_access"],
                 redirectUri: process.env.REDIRECT_URI,
-                state: {
-					"flag":flag,
-					"selDocId":selDocId
-				}
+                state: [flag, elDocId]
         });
         res.redirect(authUrl);
 });
 
 router.get("/auth/callback", async (req, res) => {
         console.log("/auth/callback");
-		console.log("req.query.---->", req.query.state.flag)
+		console.log("req.query.---->", req.query)
         const flag = req.query.state.flag;
         const selDocId = req.query.state.selDocId;
         const token = await cca.acquireTokenByCode({
