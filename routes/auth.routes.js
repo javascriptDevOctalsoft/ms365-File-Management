@@ -21,7 +21,7 @@ router.get("/login", async (req, res) => {
 
 router.get("/auth/callback", async (req, res) => {
         console.log("/auth/callback");
-		console.log("req.query.---->", req.query)
+		console.log("req.query.---->", req.query.state)
         const flag = req.query.state.flag;
         const selDocId = req.query.state.selDocId;
         const token = await cca.acquireTokenByCode({
