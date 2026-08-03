@@ -13,6 +13,7 @@ router.post("/upload", ensureAuthenticated, upload.single("file"), async (req, r
                 const selDocId = req.query.flag || req.session.selDocId;
                 const fileName = req.query.fileName || req.session.fileName;
 				console.log("uploaded filename", fileName);
+				console.log("req original filename", req.file.originalname);
                 console.log("upload flag:", flag);
                 console.log("Selected Document Id:", selDocId);
                 const appToken = await getAppToken();
