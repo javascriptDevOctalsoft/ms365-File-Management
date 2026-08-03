@@ -74,6 +74,7 @@
 
 
         <script>
+		//syncing data everytime changes is made
 		async function syncData(){
 			try{
 				const syncRes = await fetch(
@@ -91,6 +92,33 @@
 				console.error("Failed to load templates:", err);
 			}
 		}
+		
+		
+		//update table on uploading a new file
+		async function uploadDataToDB(...returnData){
+			const [fileID, fileUrl, dbRowId]= returnData
+			try{
+				const dbUploadRes = await fetch(
+					"https://bkp2.octalsoft.com/apex/oct_qms_test/dm_api/ADD_MASTER_DOC_ID",
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json"
+						},
+						body: json.stringify({
+							"FILE_ID":fileID,
+							"FILE_URL":fileUrl,
+							"ID":dbRowId
+						})
+					}
+				);
+				const dbUpdatedData = await dbUploadRes.json();
+				console.log("dbUpdatedData------>", dbUpdatedData)
+			}catch (err) {
+				console.error("Failed to load templates:", err);
+			}
+		}
+		
 		
 		// Upload Form
 		const urlParams = new URLSearchParams(window.location.search);
@@ -168,7 +196,7 @@
 				});
 				const data = await res.json();
 				console.log("uploadForm----", data.id);
-				syncData();
+				uploadDataToDB(data.id, data.webUrl, selDocId);
 				//uploadResult.innerHTML = 'File Uploaded! File Id:'+data.id+'<br><a href="'+data.webUrl+'?csf=1&web=1" target="_blank">Open File</a>';
 				uploadResult.innerHTML = 'File Uploaded & Synced Successfully!<br><a href="' +       data.webUrl + '?csf=1&web=1" target="_blank">Open File</a>';
 			} catch (err) {
