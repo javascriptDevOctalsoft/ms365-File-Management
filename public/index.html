@@ -120,6 +120,9 @@
 		const urlParams = new URLSearchParams(window.location.search);
 		const curFlag= urlParams.get('flag');
 		const selDocId= urlParams.get('selDocId');
+		const fileName= urlParams.get('fileName');
+		const verNo= urlParams.get('verNo');
+		const savedFlag= urlParams.get('saved');
 		console.log("curFlag----->", curFlag)
 		if(curFlag == 1){
 			loadMasterTemplates();
@@ -181,11 +184,13 @@
 				alert('Select a file first');
 				return;
 			}
+			console.log("fileInput.files[0]------>", fileInput.files[0])
 			const formData = new FormData();
 			formData.append('file', fileInput.files[0]);
 			formData.append('role', role);
 			formData.append('flag', curFlag);
 			formData.append('selDocId', selDocId);
+			formData.append('fileName', fileName);
 			try {
 				const res = await fetch('/upload', {
 					method: 'POST',
