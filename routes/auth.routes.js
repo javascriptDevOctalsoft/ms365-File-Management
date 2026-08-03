@@ -12,6 +12,7 @@ router.get("/login", async (req, res) => {
         req.session.fileName = fileName;
         req.session.savedFlag = savedFlag;
         console.log("flag:", flag);
+        console.log("req.query:15", req.query);
 		const state = JSON.stringify({ flag, selDocId, fileName, savedFlag});
         const authUrl = await cca.getAuthCodeUrl({
                 scopes: ["User.Read", "offline_access"],
