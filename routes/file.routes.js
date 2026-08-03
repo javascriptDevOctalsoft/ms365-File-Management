@@ -19,7 +19,7 @@ router.post("/upload", ensureAuthenticated, upload.single("file"), async (req, r
                 const appToken = await getAppToken();
                 const folderId = await ensureFolder(appToken, process.env.SOP_TEMPLATE_FOLDER, process.env.TARGET_USER);
                 //const data = await uploadFile(appToken, folderId, req.file.path, req.file.originalname);
-                const data = await modifyThenUpload(appToken, folderId, req.file.path, req.file.originalname);
+                const data = await modifyThenUpload(appToken, folderId, req.file.path, fileName+".docx");
                 console.log("modifyThenUpload response---->", data);
                 await grantPermission(data.id, req.session.user.email, "write");
                 res.json(data);
