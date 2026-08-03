@@ -8,22 +8,21 @@ router.get("/login", async (req, res) => {
         req.session.selectedFlag = flag;
         req.session.selDocId = selDocId;
         console.log("flag:", flag);
+		const state = JSON.stringify({ flag, selDocId });
         const authUrl = await cca.getAuthCodeUrl({
                 scopes: ["User.Read", "offline_access"],
                 redirectUri: process.env.REDIRECT_URI,
-                state: [{
-					"flag":flag,
-					"selDocId":selDocId
-				}]
+                state: state
         });
         res.redirect(authUrl);
 });
 
 router.get("/auth/callback", async (req, res) => {
         console.log("/auth/callback");
-		console.log("req.query.---->", req.query)
-        const flag = req.query.state.flag;
-        const selDocId = req.query.state.selDocId;
+		console.log("req.query.---->", req.query.state)
+        const state = req.query.state ? JSON.parse(req.query.state) : {};
+		const flag = state.flag;
+		const selDocId = state.selDocId;
         const token = await cca.acquireTokenByCode({
                 code: req.query.code,
                 scopes: ["User.Read", "offline_access"],
