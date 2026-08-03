@@ -44,11 +44,11 @@
 								<select id="fileId" name="fileId" required>
 									<option value="">Loading templates...</option>
 								</select>
-                                <label for="createRole">Select Role for You</label>
-                                <select id="createRole" name="role">
-                                                <option value="write">Editor</option>
-                                                <option value="read">Reader</option>
-                                </select>
+                                <!-- <label for="createRole">Select Role for You</label> -->
+                                <!-- <select id="createRole" name="role"> -->
+									<!-- <option value="write">Editor</option> -->
+									<!-- <option value="read">Reader</option> -->
+                                <!-- </select> -->
                                 <button type="submit">Create</button>
                         </form>
                         <div id="createResult" class="result"></div>
@@ -123,6 +123,7 @@
 		console.log("curFlag----->", curFlag)
 		if(curFlag == 1){
 			loadMasterTemplates();
+			syncData();
 			document.getElementById("uploadDoc").style.display= "none";
 			document.getElementById("createDoc").style.display= "block";
 			document.getElementById("convertToPdf").style.display= "none";
@@ -208,7 +209,8 @@
 		createForm.addEventListener('submit', async (e) => {
 			e.preventDefault();
 			const fileId = document.getElementById('fileId').value;
-			const role = document.getElementById('createRole').value;
+			<!-- const role = document.getElementById('createRole').value; -->
+			const role = "write";
 
 			if (!fileId) {
 				alert('Enter document name');
