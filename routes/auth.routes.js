@@ -6,7 +6,7 @@ router.get("/login", async (req, res) => {
 		let flag = null, selDocId = null, fileName= null, savedFlag= null, docType= null, sopType= null, labSOP = null;
         flag = req.query.flag;
         selDocId = req.query.curDocId;
-		if(req.query.verNo != undefined && (req.query.verNo != null || req.query.verNo !="")){
+		if(req.query.verNo != undefined && (req.query.verNo != null || req.query.verNo !="null")){
 			fileName = req.query.fileName+"_V"+req.query.verNo;
 		}else{
 			fileName = req.query.fileName;
