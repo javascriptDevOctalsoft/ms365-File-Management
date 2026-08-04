@@ -235,7 +235,7 @@
 				const res = await fetch('/create-blank', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ fileId, role })
+					body: JSON.stringify({ fileId, role, fileName})
 				});
 				const data = await res.json();
 				console.log("result--------->", data, data.webUrl)
