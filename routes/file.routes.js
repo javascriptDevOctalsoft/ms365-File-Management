@@ -49,6 +49,7 @@ router.post("/uploadSignedPdf", ensureAuthenticated, upload.single("file"), asyn
 router.post("/create-blank", ensureAuthenticated, async (req, res) => {
     try{
                 const { fileId, role } = req.body;
+				const fileName = req.query.fileName || req.session.fileName;
                 if (!fileId) return res.status(400).send("Missing fileId");
                 const selectedRole = role || "write";
                 const appToken = await getAppToken();
@@ -57,7 +58,7 @@ router.post("/create-blank", ensureAuthenticated, async (req, res) => {
                 const targeFolderId = await ensureFolder(appToken, process.env.FINAL_SOP_FOLDER, process.env.TARGET_USER);
                 console.log("sourceFileId----->", sourceFileId);
                 console.log("targeFolderId----->", targeFolderId);
-                const data = await createBlankDoc(appToken, sourceFileId, targeFolderId);
+                const data = await createBlankDoc(appToken, sourceFileId, targeFolderId, fileName);
                 console.log("data----->", data);
                 await grantPermission(data.id, req.session.user.email, selectedRole);
                 res.json(data);
