@@ -6,7 +6,12 @@ router.get("/login", async (req, res) => {
 		let flag = null, selDocId = null, fileName= null, savedFlag= null, docType= null, sopType= null, labSOP = null;
         flag = req.query.flag;
         selDocId = req.query.curDocId;
-        fileName = req.query.fileName+"_V"+req.query.verNo;
+		if(req.query.verNo != undefined && (req.query.verNo != null || req.query.verNo !="")){
+			fileName = req.query.fileName+"_V"+req.query.verNo;
+		}else{
+			fileName = req.query.fileName;
+		}
+        
         savedFlag = req.query.saved;
         docType = req.query.docType;
         sopType = req.query.sopType;
@@ -56,7 +61,7 @@ router.get("/auth/callback", async (req, res) => {
         if (flag) {
                 req.session.selectedFlag = flag;
         }
-        res.redirect("/?flag="+flag+"&selDocId="+selDocId+"&fileName="+fileName+"&saved="+savedFlag+"&docType="+docType+"&sopType="+sopType+"&labSOP="+labSOP);
+        res.redirect("/?flag="+flag+"&selDocId="+selDocId+"&fileName="+fileName+"&verNo="+verNo+"&saved="+savedFlag+"&docType="+docType+"&sopType="+sopType+"&labSOP="+labSOP);
 });
 
 
