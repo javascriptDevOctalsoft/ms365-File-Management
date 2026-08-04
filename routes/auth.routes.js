@@ -44,8 +44,8 @@ router.get("/auth/callback", async (req, res) => {
 		const verNo = state.verNo;
 		const savedFlag = state.savedFlag;
 		const docType = state.docType || null;
-		const sopType = state.sopType || null;
-		const labSOP = state.labSOP || null;
+		const sopType = state.sopType || "";
+		const labSOP = state.labSOP || "";
 		console.log("selDocId---->", selDocId)
         const token = await cca.acquireTokenByCode({
                 code: req.query.code,
