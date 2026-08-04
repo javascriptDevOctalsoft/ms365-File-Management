@@ -25,11 +25,11 @@
                         <form id="uploadForm">
                                 <label for="file">Select File</label>
                                 <input type="file" id="file" name="file" required>
-                                <label for="uploadRole">Select Role for You</label>
-                                <select id="uploadRole" name="role">
-                                        <option value="write">Editor</option>
-                                        <option value="read">Reader</option>
-                                </select>
+                                <!-- <label for="uploadRole">Select Role for You</label> -->
+                                <!-- <select id="uploadRole" name="role"> -->
+                                        <!-- <option value="write">Editor</option> -->
+                                        <!-- <option value="read">Reader</option> -->
+                                <!-- </select> -->
                                 <button type="submit">Upload</button>
                         </form>
                         <div id="uploadResult" class="result"></div>
@@ -182,7 +182,8 @@
 				return;
 			}
 			const fileInput = document.getElementById('file');
-			const role = document.getElementById('uploadRole').value;
+			<!-- const role = document.getElementById('uploadRole').value; -->
+			const role = "write";
 
 			if (!fileInput.files.length) {
 				alert('Select a file first');
