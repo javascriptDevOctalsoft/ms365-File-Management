@@ -177,6 +177,10 @@
 		
 		uploadForm.addEventListener('submit', async (e) => {
 			e.preventDefault();
+			if(savedFlag == 0){
+				alert("save the unsaved field in the document template master form")
+				return;
+			}
 			const fileInput = document.getElementById('file');
 			const role = document.getElementById('uploadRole').value;
 
@@ -268,4 +272,3 @@
         </script>
 </body>
 </html>
-
