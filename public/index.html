@@ -204,6 +204,7 @@
 				console.log("uploadForm----", data.id);
 				uploadDataToDB(data.id, data.webUrl, selDocId);
 				//uploadResult.innerHTML = 'File Uploaded! File Id:'+data.id+'<br><a href="'+data.webUrl+'?csf=1&web=1" target="_blank">Open File</a>';
+				window.parent.postMessage({ type: "UPLOAD_RESULT", value: "File Uploaded & Synced Successfully "}, "*");
 				uploadResult.innerHTML = 'File Uploaded & Synced Successfully!<br><a href="' +       data.webUrl + '?csf=1&web=1" target="_blank">Open File</a>';
 			} catch (err) {
 				console.error(err);
