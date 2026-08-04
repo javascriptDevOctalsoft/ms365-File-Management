@@ -3,17 +3,24 @@ const router = express.Router();
 const { cca } = require("../config/msalConfig");
 
 router.get("/login", async (req, res) => {
-        const flag = req.query.flag;
-        const selDocId = req.query.curDocId;
-        const fileName = req.query.fileName+"_V"+req.query.verNo;
-        const savedFlag = req.query.saved;
+		let flag = null, selDocId = null, fileName= null, savedFlag= null, docType= null, sopType= null, labSOP = null;
+        flag = req.query.flag;
+        selDocId = req.query.curDocId;
+        fileName = req.query.fileName+"_V"+req.query.verNo;
+        savedFlag = req.query.saved;
+        docType = req.query.docType;
+        sopType = req.query.sopType;
+        labSOP = req.query.labSOP;
         req.session.selectedFlag = flag;
         req.session.selDocId = selDocId;
         req.session.fileName = fileName;
         req.session.savedFlag = savedFlag;
+        req.session.docType = docType;
+        req.session.sopType = sopType;
+        req.session.labSOP = labSOP;
         console.log("flag:", flag);
         console.log("req.query:15", req.query);
-		const state = JSON.stringify({ flag, selDocId, fileName, savedFlag});
+		const state = JSON.stringify({ flag, selDocId, fileName, savedFlag, docType, sopType, labSOP});
         const authUrl = await cca.getAuthCodeUrl({
                 scopes: ["User.Read", "offline_access"],
                 redirectUri: process.env.REDIRECT_URI,
@@ -31,6 +38,9 @@ router.get("/auth/callback", async (req, res) => {
 		const fileName = state.fileName;
 		const verNo = state.verNo;
 		const savedFlag = state.savedFlag;
+		const docType = state.docType || null;
+		const sopType = state.sopType || null;
+		const labSOP = state.labSOP || null;
 		console.log("selDocId---->", selDocId)
         const token = await cca.acquireTokenByCode({
                 code: req.query.code,
@@ -46,7 +56,7 @@ router.get("/auth/callback", async (req, res) => {
         if (flag) {
                 req.session.selectedFlag = flag;
         }
-        res.redirect("/?flag="+flag+"&selDocId="+selDocId+"&fileName="+fileName+"&saved="+savedFlag);
+        res.redirect("/?flag="+flag+"&selDocId="+selDocId+"&fileName="+fileName+"&saved="+savedFlag+"&docType="+docType+"&sopType="+sopType+"&labSOP="+labSOP);
 });
 
 
