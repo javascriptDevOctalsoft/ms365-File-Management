@@ -119,10 +119,13 @@
 		// Upload Form
 		const urlParams = new URLSearchParams(window.location.search);
 		const curFlag= urlParams.get('flag');
-		const selDocId= urlParams.get('selDocId');
-		const fileName= urlParams.get('fileName');
-		const verNo= urlParams.get('verNo');
-		const savedFlag= urlParams.get('saved');
+		const selDocId= urlParams.get('selDocId') || null;
+		const fileName= urlParams.get('fileName') || null;
+		const verNo= urlParams.get('verNo') || null;
+		const savedFlag= urlParams.get('saved') || null;
+		const sopType= urlParams.get('sopType') || null;
+		const docType= urlParams.get('docType') || null;
+		const labSOP= urlParams.get('labSOP') || null;
 		console.log("curFlag----->", curFlag)
 		if(curFlag == 1){
 			loadMasterTemplates();
@@ -148,7 +151,7 @@
 
 			try {
 				const response = await fetch(
-					"https://bkp2.octalsoft.com/apex/oct_qms_test/dm_api/get_master_template"
+				"https://bkp2.octalsoft.com/apex/oct_qms_test/dm_api/get_master_template?DOCUMENT_TYPE="+docType+"&SOP_TYPE="+sopType+"&LAB_SOP="+labSOP
 				);
 
 				const data = await response.json();
