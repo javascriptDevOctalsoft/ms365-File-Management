@@ -677,10 +677,11 @@ async function uploadFile(appToken, folderId, filePath, fileName) {
 }
 
 // Create blank Word document
-async function createBlankDoc(appToken, sourceFileId, targetFolderId) {
+async function createBlankDoc(appToken, sourceFileId, targetFolderId, fileName) {
         //Get original file name
     const metadata = await getFileMetadata(appToken, sourceFileId);
-    const originalName = metadata.name;
+    // const originalName = metadata.name;
+    const originalName = fileName+".docx";
         console.log(metadata.parentReference)
         //console.log('createBlankDoc--->', appToken, targetFolderId, originalName);
         // const url = `https://graph.microsoft.com/v1.0/users/${process.env.TARGET_USER}/drive/items/${folderId}:/${fileName}.docx:/content`;
@@ -1063,4 +1064,3 @@ async function convertAndAppendPdfPipeline(appToken, sourceFileId, folderId) {
 }
 
 module.exports = { ensureFolder, uploadFile, createBlankDoc, modifyThenUpload, convertAndAppendPdfPipeline };
-
