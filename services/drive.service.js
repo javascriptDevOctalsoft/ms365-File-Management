@@ -676,10 +676,56 @@ async function uploadFile(appToken, folderId, filePath, fileName) {
         }
 }
 
+//grant user permission for particular document on MS365
+async function grantMixedPermissions(driveId, itemId, accessToken, permissionsConfig) {
+    const url = `https://graph.microsoft.com/v1.0/drives/${driveId}/items/${itemId}/invite`;
+
+    const requestPromises = permissionsConfig.map(config => {
+        const recipientObjects = config.emails.map(email => ({ email }));
+
+        const payload = {
+            recipients: recipientObjects,
+            roles: [config.role], // ["write"] or ["read"]
+            requireSignIn: true,
+            sendInvitation: false
+        };
+
+        return fetch(url, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        }).then(async response => {
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(
+                    `Failed for role ${config.role}: ${response.status} - ${
+                        errorData.error?.message || response.statusText
+                    }`
+                );
+            }
+            return response.json();
+        });
+    });
+
+    const results = await Promise.all(requestPromises);
+    console.log("All permissions processed successfully:", results);
+    return results;
+}
+
+
 // Create blank Word document
 async function createBlankDoc(appToken, sourceFileId, targetFolderId, fileName) {
-        //Get original file name
+    //Get original file name
     const metadata = await getFileMetadata(appToken, sourceFileId);
+	const permissionsToGrant = [
+		{
+			role: "read",
+			emails: ["dummy.test@sunpharma.com"]
+		}
+	];
     // const originalName = metadata.name;
     const originalName = fileName+".docx";
         console.log("metadata.parentReference---->", metadata.parentReference)
@@ -717,8 +763,9 @@ async function createBlankDoc(appToken, sourceFileId, targetFolderId, fileName) 
 			await pollCopyOperation(monitorUrl);
 			const newFileId = await findFileInFolder(appToken, targetFolderId, originalName);
 			console.log("newFile----->", newFileId);
-			//const driveId = await getDriveIdForUser(appToken, process.env.TARGET_USER);
-			//await grantMixedPermissions(driveId, newFileId, appToken, permissionsConfig);//grant user permission
+			const targetMetadata = await getFileMetadata(appToken, sourceFileId);
+			const driveId= targetMetadata.parentReference.driveId;
+			await grantMixedPermissions(driveId, newFileId, appToken, permissionsToGrant);//grant user permission
 			return newFileId;
         } catch (error) {
 			console.error("Upload failed:");
