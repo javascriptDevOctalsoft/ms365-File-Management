@@ -682,7 +682,7 @@ async function createBlankDoc(appToken, sourceFileId, targetFolderId, fileName) 
     const metadata = await getFileMetadata(appToken, sourceFileId);
     // const originalName = metadata.name;
     const originalName = fileName+".docx";
-        console.log(metadata.parentReference)
+        console.log("metadata.parentReference---->", metadata.parentReference)
         //console.log('createBlankDoc--->', appToken, targetFolderId, originalName);
         // const url = `https://graph.microsoft.com/v1.0/users/${process.env.TARGET_USER}/drive/items/${folderId}:/${fileName}.docx:/content`;
         const url = `https://graph.microsoft.com/v1.0/users/${process.env.TARGET_USER}/drive/items/${sourceFileId}/copy`;
@@ -717,6 +717,8 @@ async function createBlankDoc(appToken, sourceFileId, targetFolderId, fileName) 
 			await pollCopyOperation(monitorUrl);
 			const newFileId = await findFileInFolder(appToken, targetFolderId, originalName);
 			console.log("newFile----->", newFileId);
+			//const driveId = await getDriveIdForUser(appToken, process.env.TARGET_USER);
+			//await grantMixedPermissions(driveId, newFileId, appToken, permissionsConfig);//grant user permission
 			return newFileId;
         } catch (error) {
 			console.error("Upload failed:");
