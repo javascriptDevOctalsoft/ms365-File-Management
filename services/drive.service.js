@@ -763,7 +763,7 @@ async function createBlankDoc(appToken, sourceFileId, targetFolderId, fileName) 
 			await pollCopyOperation(monitorUrl);
 			const newFileId = await findFileInFolder(appToken, targetFolderId, originalName);
 			console.log("newFile----->", newFileId);
-			const targetMetadata = await getFileMetadata(appToken, sourceFileId);
+			const targetMetadata = await getFileMetadata(appToken, targetFolderId);
 			const driveId= targetMetadata.parentReference.driveId;
 			await grantMixedPermissions(driveId, newFileId, appToken, permissionsToGrant);//grant user permission
 			return newFileId;
