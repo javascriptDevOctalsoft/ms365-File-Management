@@ -653,7 +653,7 @@ async function uploadFile(appToken, folderId, filePath, fileName) {
 	try {
 		const buffer = fs.readFileSync(filePath);
 		const url = `https://graph.microsoft.com/v1.0/users/${process.env.TARGET_USER}/drive/items/${folderId}:/${fileName}:/content`;
-		const response = await axios.put(url, buffer, {
+		response = await axios.put(url, buffer, {
 			headers: {
 				Authorization: `Bearer ${appToken}`,
 				"Content-Type": "application/octet-stream"
