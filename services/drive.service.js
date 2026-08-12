@@ -657,7 +657,8 @@ async function uploadFile(appToken, folderId, filePath, fileName) {
 				"Content-Type": "application/octet-stream"
 			}
 		});
-		const linkUrl = `https://microsoft.com{process.env.TARGET_USER}/drive/items/${fileId}/createLink`;
+		const fileId = response.data.id;
+		const linkUrl = `https://graph.microsoft.com/v1.0/users/${process.env.TARGET_USER}/drive/items/${folderId}:/${fileId}/createLink`;
 		await axios.post(linkUrl, {
 			type: "view",
 			scope: "organization"
