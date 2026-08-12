@@ -648,32 +648,42 @@ async function ensureFolder(appToken, folderPath, targetUser) {
 
 // Upload file to folder
 async function uploadFile(appToken, folderId, filePath, fileName) {
-        try {
-                        const buffer = fs.readFileSync(filePath);
-                        const url = `https://graph.microsoft.com/v1.0/users/${process.env.TARGET_USER}/drive/items/${folderId}:/${fileName}:/content`;
-                        const response = await axios.put(url, buffer, {
-                                        headers: {
-                                                        Authorization: `Bearer ${appToken}`,
-                                                        "Content-Type": "application/octet-stream"
-                                        }
-                        });
-                        // Delete file only after successful upload
-                        fs.unlinkSync(filePath);
-						console
-                        return response.data;
+	try {
+		const buffer = fs.readFileSync(filePath);
+		const url = `https://graph.microsoft.com/v1.0/users/${process.env.TARGET_USER}/drive/items/${folderId}:/${fileName}:/content`;
+		const response = await axios.put(url, buffer, {
+			headers: {
+				Authorization: `Bearer ${appToken}`,
+				"Content-Type": "application/octet-stream"
+			}
+		});
+		const linkUrl = `https://microsoft.com{process.env.TARGET_USER}/drive/items/${fileId}/createLink`;
+		await axios.post(linkUrl, {
+			type: "view",
+			scope: "organization"
+		}, {
+			headers: {
+				Authorization: `Bearer ${appToken}`,
+				"Content-Type": "application/json"
+			}
+		});
+		// Delete file only after successful upload
+		fs.unlinkSync(filePath);
+		console
+		return response.data;
 
-        } catch (error) {
-                        console.error("File upload failed:");
-                        console.error(error.response?.data || error.message);
-                        try {
-                                        if (fs.existsSync(filePath)) {
-                                                        fs.unlinkSync(filePath);
-                                        }
-                        } catch (cleanupError) {
-                                        console.error("File cleanup failed:", cleanupError.message);
-                        }
-                        throw error;
-        }
+	} catch (error) {
+		console.error("File upload failed:");
+		console.error(error.response?.data || error.message);
+		try {
+			if (fs.existsSync(filePath)) {
+							fs.unlinkSync(filePath);
+			}
+		} catch (cleanupError) {
+			console.error("File cleanup failed:", cleanupError.message);
+		}
+		throw error;
+	}
 }
 
 //grant user permission for particular document on MS365
@@ -694,6 +704,7 @@ async function grantMixedPermissions(driveId, itemId, accessToken, permissionsCo
             method: "POST",
             headers: {
                 Authorization: `Bearer ${accessToken}`,
+				
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(payload)
