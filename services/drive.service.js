@@ -648,6 +648,8 @@ async function ensureFolder(appToken, folderPath, targetUser) {
 
 // Upload file to folder
 async function uploadFile(appToken, folderId, filePath, fileName) {
+	
+	let response= "";
 	try {
 		const buffer = fs.readFileSync(filePath);
 		const url = `https://graph.microsoft.com/v1.0/users/${process.env.TARGET_USER}/drive/items/${folderId}:/${fileName}:/content`;
@@ -657,21 +659,11 @@ async function uploadFile(appToken, folderId, filePath, fileName) {
 				"Content-Type": "application/octet-stream"
 			}
 		});
-		const fileId = response.data.id;
-		const linkUrl = `https://graph.microsoft.com/v1.0/users/${process.env.TARGET_USER}/drive/items/${folderId}:/${fileId}/createLink`;
-		await axios.post(linkUrl, {
-			type: "view",
-			scope: "organization"
-		}, {
-			headers: {
-				Authorization: `Bearer ${appToken}`,
-				"Content-Type": "application/json"
-			}
-		});
+		//const fileId = response.data.id;
+		
 		// Delete file only after successful upload
 		fs.unlinkSync(filePath);
-		console
-		return response.data;
+		//return response.data;
 
 	} catch (error) {
 		console.error("File upload failed:");
@@ -683,6 +675,46 @@ async function uploadFile(appToken, folderId, filePath, fileName) {
 		} catch (cleanupError) {
 			console.error("File cleanup failed:", cleanupError.message);
 		}
+		throw error;
+	}
+	
+	try {
+		const fileId = response.data.id;
+
+		const linkUrl =
+		  `https://graph.microsoft.com/v1.0/users/${encodeURIComponent(process.env.TARGET_USER)}` +
+		  `/drive/items/${encodeURIComponent(fileId)}/createLink`;
+
+		console.log("Creating sharing link:", linkUrl);
+
+		const linkResponse = await axios.post(
+		  linkUrl,
+		  {
+			type: "view",
+			scope: "organization"
+		  },
+		  {
+			headers: {
+			  Authorization: `Bearer ${appToken}`,
+			  "Content-Type": "application/json"
+			}
+		  }
+		);
+
+		console.log("Link created:", linkResponse.data.link?.webUrl);
+
+		return response.data;
+
+	} catch (error) {
+		console.error("CREATE LINK failed:");
+		console.error("Status:", error.response?.status);
+		console.error("URL:", error.config?.url);
+		console.error(
+		  "Response:",
+		  JSON.stringify(error.response?.data, null, 2)
+		);
+
+		// Don't delete anything here—the upload already succeeded.
 		throw error;
 	}
 }
