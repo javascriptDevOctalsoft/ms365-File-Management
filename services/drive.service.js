@@ -659,6 +659,8 @@ async function uploadFile(appToken, folderId, filePath, fileName) {
 				"Content-Type": "application/octet-stream"
 			}
 		});
+		console.log("response--------->", response)
+		
 		//const fileId = response.data.id;
 		
 		// Delete file only after successful upload
