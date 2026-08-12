@@ -677,7 +677,7 @@ async function uploadFile(appToken, folderId, filePath, fileName) {
 		}
 		throw error;
 	}
-	console.log("before permission change file data",response.data )
+	console.log("before permission change file data",response )
 	try {
 		const fileId = response.data.id;
 
